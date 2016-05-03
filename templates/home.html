@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>News</title>
+    <meta charset="UTF-8" />
+    <style>
+    .title{font-size:1.6em; color: red;}
+    </style>
+</head>
+<body>
+<h1>RSS News</h1>
+{% for article in articles %}
+<article>
+<div class="title"> {{article.title}} </div>
+<div class="meta">{{article.published}}</div>
+<div class="summary">{{article.summary}}</div>
+</article>
+{% endfor %}
+</body>
+</html>
