@@ -1,19 +1,68 @@
+<!DOCTYPE html>
 <html>
-<head>
-    <title>News</title>
-    <meta charset="UTF-8" />
-    <style>
-    .title{font-size:1.6em; color: red;}
-    </style>
-</head>
-<body>
-<h1>RSS News</h1>
-{% for article in articles %}
-<article>
-<div class="title"> {{article.title}} </div>
-<div class="meta">{{article.published}}</div>
-<div class="summary">{{article.summary}}</div>
-</article>
-{% endfor %}
-</body>
+    <head>
+        <title>News</title>
+        <meta charset="UTF-8">
+        <link rel="icon" href="{{url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='foundation/css/foundation.min.css') }}">
+        <style>
+            .title{font-size:1.6em; color: red;}
+            .summary{font-size:1.2em; font-family: sans-serif; margin-bottom: 1em;}
+            #footer{background: #CFCFCF; margin-bottom: 10px;}
+        </style>
+    </head>
+    <body>
+        <div class="row">
+            <div class="small-12 columns">
+                <div class="row">
+                    <form>
+                        <div class="small-9 columns">
+                            <input type="text" name="city" placeholder="Serach...">
+                        </div>
+                        <div class="small-3 columns">
+                            <input type="submit" value="Submit" class="success button">
+                        </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="small-6 columns">
+                        <h2>Weather</h2>
+                        <b>City</b>: {{weather.city}} <img src="{{url_for('static', filename='')}}{{weather.flag}}" /> {{weather.country}}<img src="{{weather.icon}}" /><br>
+                        <b>Temperature</b>: {{weather.temprature}}<br>
+                        <b>Description</b>: {{weather.description}}
+                    </div>
+                    <div class="small-6 columns">
+                        <h2>Currency</h2>
+                        <form>
+                        from: <select name="currency_from">
+                                {% for currency in currencies %}
+                                <option value="{{currency}}" {{'selected="selected"' if currency_from == currency}}>{{currency}}</option>
+                                {% endfor %}
+                             </select>
+                        to: <select name="currency_to">
+                                {% for currency in currencies %}
+                                <option value="{{currency}}" {{'selected="selected"' if currency_to == currency}}>{{currency}}</option>
+                                {% endfor %}
+                             </select>
+                             <input type="submit" value="check" class="button warning">
+                        </form>
+                        1 {{currency_from}} = {{currency_to}} {{rate}}
+                    </div>
+                </div>
+                <h1>RSS News</h1>
+                {% for article in articles %}
+                <div class="callout secondary">
+                    <div class="title"> <a href="{{article.link}}">{{article.title}}</a> </div>
+                    <div class="meta">{{article.published}}</div>
+                    <div class="summary">{{article.summary}}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row" id="footer">
+            <div class="small-12 columns">
+                Simple web application using Python Flask framework
+            </div>
+        </div>
+    </body>
 </html>
