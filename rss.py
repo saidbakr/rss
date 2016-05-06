@@ -46,7 +46,9 @@ def home():
                              weather = weather,
                              rate = rate,
                              currency_from = currency_from,
+                             currency_from_f = "flags/"+currency_from[0:2].lower()+".png",
                              currency_to = currency_to,
+                             currency_to_f = "flags/"+currency_to[0:2].lower()+".png",
                              currencies = sorted(currencies)
                              )
 
