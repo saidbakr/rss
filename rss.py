@@ -2,11 +2,13 @@ import feedparser
 import json
 import urllib
 import requests
+import datetime
 
 
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import make_response
 from flask.json import jsonify
 app = Flask(__name__)
 FEEDS = {
@@ -28,20 +30,28 @@ currency_url = 'https://openexchangerates.org/api/latest.json?app_id=ff31a748274
 def home():
     publisher = request.args.get('publisher')
     if not publisher:
-        publisher = DEFAULTS['publisher']
+        publisher = request.cookies.get('publisher')
+        if not publisher:
+            publisher = DEFAULTS['publisher']
     articles = get_news(publisher)
     city = request.args.get('city')
     if not city:
-        city = DEFAULTS['city']
+        city = request.cookies.get('city')
+        if not city:                
+            city = DEFAULTS['city']
     weather = get_weather(city)
     currency_from = request.args.get('currency_from')
     if not currency_from:
-        currency_from = DEFAULTS['currency_from']
+        currency_from = request.cookies.get('currency_from')
+        if not currency_from:
+            currency_from = DEFAULTS['currency_from']
     currency_to = request.args.get('currency_to')
     if not currency_to:
-        currency_to = DEFAULTS['currency_to']
+        currency_to = request.cookies.get('currency_to')
+        if not currency_to:
+            currency_to = DEFAULTS['currency_to']
     rate, currencies = get_rate(currency_from, currency_to)
-    return render_template('home.html',
+    response = make_response(render_template('home.html',
                             articles = articles,
                              weather = weather,
                              rate = rate,
@@ -49,8 +59,16 @@ def home():
                              currency_from_f = "flags/"+currency_from[0:2].lower()+".png",
                              currency_to = currency_to,
                              currency_to_f = "flags/"+currency_to[0:2].lower()+".png",
-                             currencies = sorted(currencies)
-                             )
+                             currencies = sorted(currencies),
+                             feeds = sorted(FEEDS),
+                             publisher = publisher
+                             ))
+    expires = datetime.datetime.now() + datetime.timedelta(days=365)
+    response.set_cookie("publisher", publisher, expires = expires)
+    response.set_cookie("city", city, expires = expires)
+    response.set_cookie("currency_from", currency_from, expires=expires)
+    response.set_cookie("currency_to", currency_to, expires=expires)
+    return response
 
 
 def get_rate(frm, to):

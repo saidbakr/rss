@@ -15,11 +15,17 @@
         <div class="row">
             <div class="small-12 columns">
                 <div class="row">
-                    <form>
+                    <form>                    
                         <div class="small-9 columns">
-                            <input type="text" name="city" placeholder="Serach...">
+                        <b> Choose feed from the list:</b>
+                            <select name="publisher">
+                                {% for feed in feeds %}
+                                <option value="{{feed}}" {{'selected="selected"' if feed == publisher}}>{{feed}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="small-3 columns">
+                            <br>
                             <input type="submit" value="Submit" class="success button">
                         </div>
                     </form>
@@ -27,6 +33,11 @@
                 <div class="row">
                     <div class="small-6 columns">
                         <h2>Weather</h2>
+                        <form>
+                        City:<br>
+                        <input type="text" name="city" placeholder="Enter city..."> 
+                        <input type="submit" value="Submit" class="success button">
+                        </form>
                         <b>City</b>: {{weather.city}} <img src="{{url_for('static', filename='')}}{{weather.flag}}" /> {{weather.country}}<img src="{{weather.icon}}" /><br>
                         <b>Temperature</b>: {{weather.temprature}}<br>
                         <b>Description</b>: {{weather.description}}
@@ -34,16 +45,22 @@
                     <div class="small-6 columns">
                         <h2>Currency</h2>
                         <form>
+                        <div class="row">
+                        <div class="small-6 columns">
                         from: <select name="currency_from">
                                 {% for currency in currencies %}
                                 <option value="{{currency}}" {{'selected="selected"' if currency_from == currency}}>{{currency}}</option>
                                 {% endfor %}
                              </select>
+                             </div>
+                        <div class="small-6 columns">
                         to: <select name="currency_to">
                                 {% for currency in currencies %}
                                 <option value="{{currency}}" {{'selected="selected"' if currency_to == currency}}>{{currency}}</option>
                                 {% endfor %}
                              </select>
+                        </div>
+                        </div>
                              <input type="submit" value="check" class="button warning">
                         </form>
                         1 {{currency_from}} <img src="{{url_for('static',filename='')}}{{currency_from_f}}"> = {{currency_to}} <img src="{{url_for('static',filename='')}}{{currency_to_f}}"> {{rate}}
